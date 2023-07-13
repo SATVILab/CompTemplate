@@ -2,7 +2,6 @@
 # get the Comp directory's full name.
 # needed as Comp* is not always expanded when 
 # needed below
-date
 
 # Function to check if sif is in there and then return the path if it is
 get_path_sif() {
@@ -13,29 +12,68 @@ get_path_sif() {
       echo "$1/$(ls "$1" | grep -E 'sif$')"
     else
       echo "File not found" >&2
-      exit 1
     fi
   else
     echo "Directory does not exist" >&2
-    exit 1
   fi
 }
 
 # Attempt to get path to sif in ./sif
+echo "----------------"
 echo "Attempting to get path to sif in ./sif"
-path_sif=$(get_path_sif "sif")
+path_sif="$(get_path_sif "sif")"
 
 # If path_sif is empty, attempt to get path to sif in ../$comp_dir/sif
+
 if [ -z "$path_sif" ]; then
-  comp_dir=$(ls .. | grep -e "^Comp")
-  echo "Attempting to get path to sif in ../$comp_dir/sif"
-  path_sif=$(get_path_sif "../$comp_dir/sif")
+  echo "No sif file found in ./sif."
+  echo "----------------"
+  comp_dir="$(ls .. | grep -E "^Comp")"
+  if [ -n "$comp_dir" ]; then
+    echo Attempting to get path to sif in a compendium workspace: "../$comp_dir/sif"
+    sif_dir="../$comp_dir/sif"
+    path_sif="$(get_path_sif "$sif_dir")"
+    if [ -z "$path_sif" ]; then
+      echo "No sif file found in ../$comp_dir/sif."
+      echo "----------------"
+    else
+      echo "sif file created on compendium workspace"
+      echo "----------------"
+    fi
+  else 
+    sif_dir=./
+  fi
+else
+  echo "sif file found in .sif"
+  echo "----------------"
 fi
 
-# Exit if sif file not found
-test -n "$path_sif" || { echo "sif file not found"; exit 1; }
+if [ -z "$path_sif" ]; then
+  echo "Attempting to download sif file from a GitHub release"
+  ./scripts/ubuntu/download_apptainer.sh
+  path_sif="$(get_path_sif "$sif_dir")"
 
-echo "Final path to sif: $path_sif"
+fi
+
+if [ -z "$path_sif" ]; then
+  echo "Could not download sif from from a GitHub release"
+  echo "----------------"
+  echo "Attempting to create sif file and then upload as a GitHub release"
+  ./scripts/ubuntu/build_and_upload_apptainer.sh
+  path_sif="$(get_path_sif "$sif_dir")"
+  if [ -z "$path_sif" ]; then
+    echo "Could not build and upload a sif file"
+    echo "sif file not found and could not be downloaded or built"
+    echo "----------------"
+    exit 1
+  else
+    echo "Sif file successfully built"
+    echo "----------------"
+  fi
+fi
+
+echo "Path to sif file: $path_sif"
+echo "----------------"
 
 if [ -n "$(env | grep -E "^GITPOD|^CODESPACE")" ]; then
   export RENV_CONFIG_PAK_ENABLED=${RENV_CONFIG_PAK_ENABLED:=TRUE}

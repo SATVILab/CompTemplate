@@ -1,2 +1,2 @@
 #!/usr/bin/env bash
-./run-apptainer bash
+./run-apptainer.sh bash

@@ -1,2 +1,2 @@
 #!/usr/bin/env bash
-./run-apptainer radian
+./run-apptainer.sh radian
