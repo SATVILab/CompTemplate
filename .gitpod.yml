@@ -1,0 +1,7 @@
+image: gitpod/workspace-base
+
+tasks:
+  - name: Set-up R, apptainer
+    command: |
+        ./scripts/all/post_create_command.sh
+

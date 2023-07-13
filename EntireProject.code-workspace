@@ -1,0 +1,50 @@
+{
+	"folders": [
+		{
+			"path": "."
+		},
+		{
+			"path": "../CompACSCyTOFTCells"
+		},
+		{
+			"path": "../DataTidyACSClinical"
+		},
+		{
+			"path": "../DataTidyACSCyTOFPreprocess"
+		},
+		{
+			"path": "../DataTidyACSCyTOFFAUST"
+		},
+		{
+			"path": "../PipelineDataACSCytokines"
+		},
+		{
+			"path": "../DataTidyACSCyTOFCytokinesTCells"
+		},
+		{
+			"path": "../PipelineAnalysisACS"
+		},
+		{
+			"path": "../AnalysisACSCyTOFTCells"
+		},
+		{
+			"path": "../ReportACSCyTOFTCells"
+		}
+	],
+	"settings": {
+		"terminal.integrated.shellIntegration.enabled": false,
+		"files.watcherExclude": {
+			"**/.git/objects/**": true,
+			"**/.git/subtree-cache/**": true,
+			"**/node_modules/*/**": true,
+			"../**/bin/*": true,
+			"../**/sif/*": true,
+			"../**/_data_raw/**": true,
+			"../**/_output/**": true,
+			"../**/_archive/**": true,
+			"../**/_tmp/**": true,
+			"../**/docs/**": true,
+			"../**/renv/**": true
+		}
+	}
+}
