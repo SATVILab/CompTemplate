@@ -41,8 +41,6 @@ if [ -n "$(env | grep -E "^GITPOD|^CODESPACE")" ]; then
   export RENV_CONFIG_PAK_ENABLED=${RENV_CONFIG_PAK_ENABLED:=TRUE}
 fi
 
-# Run script if sif file found
-path_script="scripts/R/faust-lymph-v1.R"
 # Run apptainer if it is found, and singularity if apptainer is not.
 # Exit with an error if neither is found
 if command -v apptainer > /dev/null 2>&1; then
