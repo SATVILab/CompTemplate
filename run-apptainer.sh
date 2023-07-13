@@ -32,6 +32,7 @@ if [ -z "$path_sif" ]; then
   if [ -n "$comp_dir" ]; then
     echo Attempting to get path to sif in a compendium workspace: "../$comp_dir/sif"
     sif_dir="../$comp_dir/sif"
+    scripts_dir="../$comp_dir/scripts"
     path_sif="$(get_path_sif "$sif_dir")"
     if [ -z "$path_sif" ]; then
       echo "No sif file found in ../$comp_dir/sif."
@@ -41,7 +42,8 @@ if [ -z "$path_sif" ]; then
       echo "----------------"
     fi
   else 
-    sif_dir=./
+    sif_dir=./sif
+    scripts_dir=./scripts
   fi
 else
   echo "sif file found in .sif"
@@ -50,7 +52,7 @@ fi
 
 if [ -z "$path_sif" ]; then
   echo "Attempting to download sif file from a GitHub release"
-  ./scripts/ubuntu/download_apptainer.sh
+  "$scripts_dir"/ubuntu/download_apptainer.sh
   path_sif="$(get_path_sif "$sif_dir")"
 
 fi
@@ -59,7 +61,7 @@ if [ -z "$path_sif" ]; then
   echo "Could not download sif from from a GitHub release"
   echo "----------------"
   echo "Attempting to create sif file and then upload as a GitHub release"
-  ./scripts/ubuntu/build_and_upload_apptainer.sh
+  "$scripts_dir"/ubuntu/build_and_upload_apptainer.sh
   path_sif="$(get_path_sif "$sif_dir")"
   if [ -z "$path_sif" ]; then
     echo "Could not build and upload a sif file"
