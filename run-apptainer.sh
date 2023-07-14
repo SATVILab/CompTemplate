@@ -1,7 +1,21 @@
 #!/bin/bash
-# get the Comp directory's full name.
-# needed as Comp* is not always expanded when 
-# needed below
+# Description: This is a Bash script that attempts to run a
+# containerized application using either Apptainer or
+# Singularity container runtimes.
+# The script first attempts
+# to locate a Singularity Image Format (SIF) file in the
+#./sif directory.
+# If it is not found, it attempts to locate
+# it in a directory named Comp* in the parent directory.
+# If it is still not found, it attempts to download the
+# SIF file from a GitHub release.
+# If it is still not found, it attempts to build and upload
+# the SIF file to a GitHub release.
+# If none of these attempts are successful, the script
+# exits with an error.
+# Finally, the script runs the containerized application
+# using either Apptainer or Singularity,
+# depending on which one is available.
 
 # Function to check if sif is in there and then return the path if it is
 get_path_sif() {
