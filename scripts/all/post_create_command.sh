@@ -12,17 +12,9 @@ fi
 ./scripts/ubuntu/install_gh.sh
 #fi
 
-sudo ./scripts/all/install_r.sh \
-  --VERSION 4.3.0 \
-  --VSCODERSUPPORT full \
-  --INSTALLDEVTOOLS true \
-  --INSTALLRENV true \
-  --INSTALLRMARKDOWN true \
-  --INSTALLRADIAN true \
-  --INSTALLVSCDEBUGGER true
+sudo ./scripts/all/install_r.sh
 
-sudo ./scripts/all/install_quarto.sh \
-  --INSTALLTINYTEX true
+sudo ./scripts/all/install_quarto.sh
 
 # clone all repos
 ./clone-repos.sh
