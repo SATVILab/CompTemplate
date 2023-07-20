@@ -10,3 +10,4 @@ vscode:
     - sourcegraph.cody-ai
     - quarto.quarto
     - REditorSupport.r
+    - bierner.markdown-preview-github-styles
