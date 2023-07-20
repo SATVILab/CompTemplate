@@ -18,7 +18,7 @@
 			"pakVersion": "auto",
 			"vscodeRSupport": "full",
 			"pandocVersion": "latest"
-		},
+		},	
 		"ghcr.io/rocker-org/devcontainer-features/quarto-cli:1": {
 			"installTinyTex": true,
 			"version": "latest"
@@ -30,7 +30,8 @@
 				"GitHub.copilot",
 				"GitHub.copilot-chat",
 				"REditorSupport.r",
-				"sourcegraph.cody-ai"
+				"sourcegraph.cody-ai",
+				"bierner.markdown-preview-github-styles"
 			]
 		}
 	}
