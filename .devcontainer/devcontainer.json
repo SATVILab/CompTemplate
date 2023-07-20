@@ -22,6 +22,16 @@
 		"ghcr.io/rocker-org/devcontainer-features/quarto-cli:1": {
 			"installTinyTex": true,
 			"version": "latest"
+		},
+	},
+	"customizations": {
+		"vscode": {
+			"extensions": [
+				"GitHub.copilot",
+				"GitHub.copilot-chat",
+				"REditorSupport.r",
+				"sourcegraph.cody-ai"
+			]
 		}
 	}
 }
