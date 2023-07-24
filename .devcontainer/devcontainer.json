@@ -22,7 +22,7 @@
 		"ghcr.io/rocker-org/devcontainer-features/quarto-cli:1": {
 			"installTinyTex": true,
 			"version": "latest"
-		},
+		}
 	},
 	"customizations": {
 		"vscode": {
