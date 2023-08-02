@@ -16,5 +16,7 @@ apt-get install -y \
   libxml2-dev \
   libxt-dev \
   locales \
-  zlib1g
+  zlib1g \
+  ghostscript \
+  libtiff-tools
   
