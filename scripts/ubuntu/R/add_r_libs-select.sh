@@ -18,5 +18,6 @@ apt-get install -y \
   locales \
   zlib1g \
   ghostscript \
-  libtiff-tools
-  
+  libtiff-tools\
+  libgmp3-dev \
+  libglpk-dev

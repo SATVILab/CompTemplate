@@ -59,4 +59,7 @@ sudo apt-get install -y apt-utils \
        cargo \
        libfreetype6-dev \
        libclang-dev \
-       fonts-roboto 
+       fonts-roboto \
+    && sudo apt-get -y install \
+       libgmp3-dev \
+       libglpk-dev
