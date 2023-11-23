@@ -32,7 +32,3 @@ if [ -f "${script_folder}/repos-to-clone.list" ]; then
         clone-repo "$repository"
     done < "${script_folder}/repos-to-clone.list"
 fi
-
-# Unset GPG signing configuration
-git config --global --unset commit.gpgsign
-git config --unset commit.gpgsign
