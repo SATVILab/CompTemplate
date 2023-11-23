@@ -1,7 +1,7 @@
 image: ghcr.io/rocker-org/devcontainer/geospatial:4
 
 tasks:
-  - name: Set-up R, apptainer
+  - name: Minor config for R to work in cloud dev env's
     command: |
         ./scripts/setup/post_create_command.sh 
 
