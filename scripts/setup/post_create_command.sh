@@ -20,6 +20,8 @@ if ! [ -e "$HOME/.bashrc.d/config_r.sh" ]; then
   chmod 755 "$HOME/.bashrc.d/config_r.sh"
 fi
 echo "completed adding config_r.sh to be sourced if it's not already present"
+"$HOME/.bashrc.d/config_r.sh"
+echo "Sourced config_r.sh"
 echo "-------------------"
 
 # clone all repos
