@@ -1,4 +1,4 @@
-image: gitpod/workspace-base
+image: ghcr.io/rocker-org/devcontainer/geospatial:4
 
 tasks:
   - name: Set-up R, apptainer
