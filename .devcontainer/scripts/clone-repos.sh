@@ -30,8 +30,8 @@ fi
 # If there is a list of repositories to clone, clone them
 if [ -f "./repos-to-clone.list" ]; then
     while IFS= read -r repository || [ -n "$repository" ]; do
-        # Skip lines that are empty or contain only whitespace
-        if [[ -z "$repository" || "$repository" =~ ^[[:space:]]*$ ]]; then
+        # Skip lines that are empty, contain only whitespace, or start with a hash
+        if [[ -z "$repo" || "$repo" =~ ^[[:space:]]*# || "$repo" =~ ^[[:space:]]+$ ]]; then
             continue
         fi
 

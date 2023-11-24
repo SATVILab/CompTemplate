@@ -17,8 +17,8 @@ fi
 # Read and process each line from repos-to-clone.list
 while IFS= read -r repo || [ -n "$repo" ]; do
     echo $repo
-    # Skip empty lines
-    if [[ -z "$repo" || "$repo" =~ ^[[:space:]]*$ ]]; then
+    # Skip lines that are empty, contain only whitespace, or start with a hash
+    if [[ -z "$repo" || "$repo" =~ ^[[:space:]]*# || "$repo" =~ ^[[:space:]]+$ ]]; then
         continue
     fi
 
