@@ -27,7 +27,7 @@ echo "-------------------"
 # source config_r_vscode.sh if on GitPod
 if [ -n "$(env | grep -E "^GITPOD")" ]; then
   "$project_root/.devcontainer/scripts/config_r_vscode.sh" 
-else  if [ -n "$(env | grep -E "^CODESPACE")" ]; then
+elif [ -n "$(env | grep -E "^CODESPACES")" ]; then
   # add config_r_vscode.sh to be sourced if 
   # it's not already present
   echo "add config_r_vscode.sh to be sourced if it's not already present"
@@ -42,15 +42,7 @@ else  if [ -n "$(env | grep -E "^CODESPACE")" ]; then
   "$HOME/.bashrc.d/config_r_vscode.sh"
   echo "Sourced config_r_vscode.sh"
   echo "-------------------"
-
 fi
-
-# adjust vs code r.libPaths setting
-# it works to do it like this for GitPod:
-
-
-
-echo "completed adjusting vs code r.libPaths setting"
 
 # clone all repos
 "$project_root/clone-repos.sh"
