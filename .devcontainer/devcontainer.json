@@ -1,4 +1,5 @@
 /**
+ * Last modified: 2023 Nov 24
  * This JSON file contains the configuration for the development container used in the ProjectACSCyTOFTCells project.
  * It specifies the Docker image to use, as well as the features to install in the container.
  * The "ghcr.io/rocker-org/devcontainer-features/r-rig:1" feature installs R and related tools, while the "ghcr.io/rocker-org/devcontainer-features/quarto-cli:1" feature installs Quarto and TinyTeX.

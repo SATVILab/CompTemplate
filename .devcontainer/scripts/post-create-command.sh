@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
+# Last modified: 2023 Nov 24
 
 # This script is executed after the creation of the project's development container.
 # It performs the following tasks:

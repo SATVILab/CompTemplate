@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
+# Last modified: 2023 Nov 24
 
 # This script is used to add repositories to a workspace JSON file,
 # which can be used to open all repos in a multi-root VS Code workspace.
