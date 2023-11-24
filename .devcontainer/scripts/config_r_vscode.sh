@@ -21,7 +21,7 @@ path_rel=".vscode-remote/data/Machine/settings.json"
 if [ -n "$(env | grep -E "^GITPOD")" ]; then
   path_file_json="/workspace/$path_rel"
 else 
-  path_file_json="/home/codespace/$path_rel"
+  path_file_json="/home/$USER/$path_rel"
 fi
 
 # Define the new key and value you want to add
