@@ -48,4 +48,4 @@ elif [ -n "$(env | grep -E "^CODESPACES")" ]; then
 fi
 
 # clone all repos
-"$project_root/clone-repos.sh"
+"$project_root/.devcontainer/scripts/clone-repos.sh"

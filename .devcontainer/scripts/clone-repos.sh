@@ -1,15 +1,16 @@
 #!/usr/bin/env bash
 
-# Get the absolute path of the script folder
-script_folder="$(cd $(dirname "${BASH_SOURCE[0]}") && pwd)"
+# Get the absolute path of the current working directory
+current_dir="$(pwd)"
 
-# Get the absolute path of the workspaces folder
-workspaces_folder="$(cd "${script_folder}/.." && pwd)"
+# Determine the parent directory of the current directory
+parent_dir="$(cd "${current_dir}/.." && pwd)"
+
 
 # Function to clone a repository
 clone-repo()
 {
-    cd "${workspaces_folder}"
+    cd "${parent_dir}"
     if [ ! -d "${1#*/}" ]; then
         git clone "https://github.com/$1"
     else 
@@ -27,8 +28,13 @@ if [ "${CODESPACES}" = "true" ]; then
 fi
 
 # If there is a list of repositories to clone, clone them
-if [ -f "${script_folder}/repos-to-clone.list" ]; then
-    while IFS= read -r repository; do
+if [ -f "./repos-to-clone.list" ]; then
+    while IFS= read -r repository || [ -n "$repository" ]; do
+        # Skip lines that are empty or contain only whitespace
+        if [[ -z "$repository" || "$repository" =~ ^[[:space:]]*$ ]]; then
+            continue
+        fi
+
         clone-repo "$repository"
-    done < "${script_folder}/repos-to-clone.list"
+    done < "./repos-to-clone.list"
 fi
