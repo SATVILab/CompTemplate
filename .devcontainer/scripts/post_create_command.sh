@@ -27,7 +27,7 @@ echo "-------------------"
 # source config_r_vscode.sh if on GitPod
 if [ -n "$(env | grep -E "^GITPOD")" ]; then
   "$project_root/.devcontainer/scripts/config_r_vscode.sh" 
-else 
+else  if [ -n "$(env | grep -E "^CODESPACE")" ]; then
   # add config_r_vscode.sh to be sourced if 
   # it's not already present
   echo "add config_r_vscode.sh to be sourced if it's not already present"
