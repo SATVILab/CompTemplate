@@ -2,7 +2,7 @@ image: ghcr.io/rocker-org/devcontainer/geospatial:4
 
 tasks:
   - name: Minor config for R to work in cloud dev env's
-    command: .devcontainer/scripts/post_create_command.sh 
+    command: .devcontainer/scripts/post-create-command.sh 
 
 vscode:
   extensions:
