@@ -13,9 +13,9 @@ if [ -n "$(env | grep -E "^GITPOD|^CODESPACE")" ]; then
       workspace_dir="/workspaces"
     fi
     export R_LIBS=${R_LIBS:="$workspace_dir/.local/lib/R"}
-    export RENV_PATHS_CACHE=${RENV_PATHS_CACHE:=/"$workspace_dir/.local/R/lib/renv"}
-    export RENV_PATHS_LIBRARY_ROOT=${RENV_PATHS_LIBRARY_ROOT:=/"$workspace_dir/.local/.cache/R/renv"}
-    export RENV_PATHS_LIBRARY=${RENV_PATHS_LIBRARY:=/"$workspace_dir/.local/.cache/R/renv"}
+    export RENV_PATHS_CACHE=${RENV_PATHS_CACHE:="$workspace_dir/.local/R/lib/renv"}
+    export RENV_PATHS_LIBRARY_ROOT=${RENV_PATHS_LIBRARY_ROOT:="$workspace_dir/.local/.cache/R/renv"}
+    export RENV_PATHS_LIBRARY=${RENV_PATHS_LIBRARY:="$workspace_dir/.local/.cache/R/renv"}
     export RENV_PREFIX_AUTO=${RENV_PREFIX_AUTO:=TRUE}
     export RENV_CONFIG_PAK_ENABLED=${RENV_CONFIG_PAK_ENABLED:=TRUE}
 fi
