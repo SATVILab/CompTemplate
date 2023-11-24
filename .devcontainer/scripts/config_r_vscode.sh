@@ -24,6 +24,11 @@ else
   path_file_json="/home/$USER/$path_rel"
 fi
 
+# Create the JSON file if it does not exist
+if [ ! -f "$path_file_json" ]; then
+    echo "{}" > "$path_file_json"
+fi
+
 # Define the new key and value you want to add
 new_key="r.libPaths"
 new_array=$(Rscript -e "cat(.libPaths(), sep = '\n')" | sed ':a;N;$!ba;s/\n/", "/g' | sed 's/^/["/' | sed 's/$/"]/')
