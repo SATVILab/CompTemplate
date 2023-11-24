@@ -1,5 +1,9 @@
 #!/usr/bin/env bash
 
+# Clones all repos in repos-to-clone.list
+# into the parent directory of the current
+# working directory.
+
 # Get the absolute path of the current working directory
 current_dir="$(pwd)"
 
@@ -30,8 +34,8 @@ fi
 # If there is a list of repositories to clone, clone them
 if [ -f "./repos-to-clone.list" ]; then
     while IFS= read -r repository || [ -n "$repository" ]; do
-        # Skip lines that are empty, contain only whitespace, or start with a hash
-        if [[ -z "$repo" || "$repo" =~ ^[[:space:]]*# || "$repo" =~ ^[[:space:]]+$ ]]; then
+        # Skip lines that are empty or contain only whitespace
+        if [[ -z "$repository" || "$repository" =~ ^[[:space:]]*$ || "$repository" =~ ^[[:space:]]*# ]]; then
             continue
         fi
 

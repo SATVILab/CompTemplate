@@ -1,3 +1,5 @@
+#!/usr/bin/env bash
+
 # This script is used to configure R settings in Visual Studio Code (VSCode) for GitPod or Codespace environments.
 # It sets the `r.libPaths` VS Code settings to the default `.libPaths()` output
 # when not using `renv`, as this is where the R packages
@@ -8,8 +10,6 @@
 # Then, it defines a new key and value to be added to the JSON file.
 # If the key already exists in the JSON file, the script exits.
 # Otherwise, it adds the key-value pair to the JSON file using the 'jq' command.
-
-#!/usr/bin/env bash
 
 # exit if not on GitPod or Codespace
 if [ -z "$(env | grep -E "^GITPOD|^CODESPACE")" ]; then

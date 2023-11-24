@@ -1,4 +1,17 @@
 #!/usr/bin/env bash
+
+# This script is executed after the creation of the project's development container.
+# It performs the following tasks:
+# 1. Ensures that `$HOME/.bashrc.d` files are sourced.
+# 2. Sets up the `bashrc_d` configuration.
+# 3. Adds the `config-r.sh` file to be sourced if it's not already present.
+# 4. Sources the `config-r.sh` file.
+# 5. Sources the `config-r-vscode.sh` file if the environment is GitPod.
+# 6. Adds the `config-r-vscode.sh` file to be sourced if it's not already present in the case of CodeSpaces.
+# 7. Sources the `config-r-vscode.sh` file in the case of CodeSpaces.
+# 8. Clones all repositories in repos-to-clone.list.
+# 9. Adds all repositories in repos-to-clone.list to the workspace file (EntireProject.code-workspace).
+
 # ensure that `$HOME/.bashrc.d` files are sourced
 echo "run post-create-command.sh"
 
