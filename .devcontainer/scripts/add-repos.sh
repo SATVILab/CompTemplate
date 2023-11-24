@@ -20,7 +20,7 @@ fi
 
 # Read and process each line from repos-to-clone.list
 while IFS= read -r repo || [ -n "$repo" ]; do
-  echo $repo
+
   # Skip lines that are empty, contain only whitespace, or start with a hash
   if [[ -z "$repo" || "$repo" =~ ^[[:space:]]*# || "$repo" =~ ^[[:space:]]+$ ]]; then
     continue
@@ -29,9 +29,6 @@ while IFS= read -r repo || [ -n "$repo" ]; do
   # Extract the repository name and create the path
   repo_name="${repo##*/}"
   repo_path="../$repo_name"
-
-  echo $repo_name
-  echo $repo_path
 
   # Check if the path is already in the workspace file
   if jq -e --arg path "$repo_path" '.folders[] | select(.path == $path) | length > 0' "$workspace_file" > /dev/null; then

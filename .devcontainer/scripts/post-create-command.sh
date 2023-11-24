@@ -62,7 +62,9 @@ elif [ -n "$(env | grep -E "^CODESPACES")" ]; then
 fi
 
 # clone all repos
+echo "Cloning all repos in repos-to-clone.list"
 "$project_root/.devcontainer/scripts/clone-repos.sh"
 
 # add all repos to workspace
+echo "Adding all repos in repos-to-clone.list to the workspace file (EntireProject.code-workspace)"
 "$project_root/.devcontainer/scripts/add-repos.sh"
