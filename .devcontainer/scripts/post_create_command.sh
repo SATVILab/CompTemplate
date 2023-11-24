@@ -25,7 +25,9 @@ echo "Sourced config_r.sh"
 echo "-------------------"
 
 # adjust vs code r.libPaths setting
+echo "adjust vs code r.libPaths setting"
 "$project_root/.devcontainer/scripts/config_r_vscode.sh"
+echo "completed adjusting vs code r.libPaths setting"
 
 # clone all repos
 "$project_root/clone-repos.sh"
