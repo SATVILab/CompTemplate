@@ -14,15 +14,15 @@
 
 # exit if not on GitPod or Codespace
 if [ -z "$(env | grep -E "^GITPOD|^CODESPACE")" ]; then
-  exit 0
+    exit 0
 fi
 
 # Define the path to your JSON file
 path_rel=".vscode-remote/data/Machine/settings.json"
 if [ -n "$(env | grep -E "^GITPOD")" ]; then
-  path_file_json="/workspace/$path_rel"
+    path_file_json="/workspace/$path_rel"
 else 
-  path_file_json="/home/$USER/$path_rel"
+    path_file_json="/home/$USER/$path_rel"
 fi
 
 # Create the JSON file if it does not exist
@@ -33,14 +33,11 @@ fi
 # Define the new key and value you want to add
 new_key="r.libPaths"
 
-# Check if r.libPaths already exists in the JSON file
-if jq -e ". | has(\"$new_key\")" "$path_file_json" > /dev/null; then
-    exit 0
+# only run if  r.libPaths does not already exist in the JSON file
+if ! jq -e ". | has(\"$new_key\")" "$path_file_json" > /dev/null; then
+    # get the value(s) to add.
+    # --vanilla to avoid `renv` settings coming in
+    new_array=$(Rscript --vanilla -e "setwd(tempdir()); cat(.libPaths(), sep = '\n')" | sed ':a;N;$!ba;s/\n/", "/g' | sed 's/^/["/' | sed 's/$/"]/')
+    # Add the key-value pair to the JSON file
+    jq --arg key "$new_key" --argjson value "$new_array" '. + {($key): $value}' $path_file_json > temp.json && mv temp.json $path_file_json
 fi
-
-# Define the value you want to add
-new_array=$(Rscript --vanilla -e "setwd(tempdir()); cat(.libPaths(), sep = '\n')" | sed ':a;N;$!ba;s/\n/", "/g' | sed 's/^/["/' | sed 's/$/"]/')
-
-
-# Add the key-value pair to the JSON file
-jq --arg key "$new_key" --argjson value "$new_array" '. + {($key): $value}' $path_file_json > temp.json && mv temp.json $path_file_json
