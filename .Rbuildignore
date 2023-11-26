@@ -1,4 +1,5 @@
 # ignore CDE and VS Code workspace files
+
 ^\.devcontainer$
 ^\.devcontainer/
 ^repos-to-clone\.list$
