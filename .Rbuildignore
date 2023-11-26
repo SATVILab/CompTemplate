@@ -1,0 +1,6 @@
+^\.devcontainer$
+^\.devcontainer/
+^repos-to-clone\.list$
+^\.gitpod\.yml$
+^\.Renviron$
+^EntireProject\.code-workspace$
