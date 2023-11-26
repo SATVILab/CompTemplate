@@ -18,7 +18,8 @@
 				"GitHub.copilot",
 				"GitHub.copilot-chat",
 				"REditorSupport.r",
-				"bierner.markdown-preview-github-styles"
+				"bierner.markdown-preview-github-styles",
+				"eamodio.gitlens"
 			]
 		}
 	}
