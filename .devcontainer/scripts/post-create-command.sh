@@ -12,7 +12,10 @@
 # 7. Sources the `config-r-vscode.sh` file in the case of CodeSpaces.
 
 # ensure that `$HOME/.bashrc.d` files are sourced
+echo " "
+echo "==================="
 echo "run post-create-command.sh"
+echo "-------------------"
 
 project_root="$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)" 
 
@@ -34,15 +37,15 @@ fi
 echo "completed adding config-r.sh to be sourced if it's not already present"
 "$HOME/.bashrc.d/config-r.sh"
 echo "Sourced config-r.sh"
-echo "-------------------"
 
 # source config-r-vscode.sh if on GitPod
 if [ -n "$(env | grep -E "^GITPOD")" ]; then
+  echo "-------------------"
   echo "Sourcing config-r-vscode.sh"
   "$project_root/.devcontainer/scripts/config-r-vscode.sh" 
   echo "Sourced config-r-vscode.sh"
-  echo "-------------------"
 elif [ -n "$(env | grep -E "^CODESPACES")" ]; then
+  echo "-------------------"
   # add config-r-vscode.sh to be sourced if 
   # it's not already present
   echo "add config-r-vscode.sh to be sourced if it's not already present"
@@ -56,5 +59,4 @@ elif [ -n "$(env | grep -E "^CODESPACES")" ]; then
   echo "completed adding config-r-vscode.sh to be sourced if it's not already present"
   "$HOME/.bashrc.d/config-r-vscode.sh"
   echo "Sourced config-r-vscode.sh"
-  echo "-------------------"
 fi
