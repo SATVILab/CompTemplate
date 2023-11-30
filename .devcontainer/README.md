@@ -1,17 +1,14 @@
-#!/usr/bin/env bash
-# Last modified: 2023 Nov 30
-# Creating a Bash script to update specific files from a template repository to other repositories involves a few steps. The script will:
+# README
 
-# 1. Clone the template repository or pull the latest changes if it's already cloned.
-# 2. Copy the specified files and folders (devcontainer.json folder and .gitpod.yml) to the target repository.
-# 3. Ensure file permissions are set correctly.
+To add these settings to a pre-existing project, copy and paste the following into a bash shell, and then delete:
 
+```bash
 echo "Update .devcontainer folder and .gitpod.yml file to latest MiguelRodo/CompTemplate settings"
 echo "Note: it overwrites any files MiguelRodo/CompTemplate has, but does not delete files MiguelRodo/CompTemplate doesn't"
 
 # Define paths
 TEMPLATE_REPO_PATH="/tmp/update_template_settings/CompTemplate"
-TARGET_REPO_PATH="$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)" 
+TARGET_REPO_PATH="$(pwd)" 
 
 # Clone or update the template repository
 if [ ! -d "$TEMPLATE_REPO_PATH" ]; then
@@ -20,8 +17,7 @@ else
     git -C "$TEMPLATE_REPO_PATH" pull
 fi
 
-# Functions to copy and set permissions
-# executable files
+# Function to copy and set permissions
 copy_and_set_755_permissions() {
     src=$1
     dest=$2
@@ -30,7 +26,7 @@ copy_and_set_755_permissions() {
     # Set executable permissions for everyone and write permission only for the user
     chmod -R u+rwX,go+rX,go-w "$dest"
 }
-# non-executable files
+
 copy_and_set_644_permissions() {
     src=$1
     dest=$2
@@ -50,3 +46,15 @@ copy_and_set_644_permissions "$TEMPLATE_REPO_PATH/.devcontainer" "$TARGET_REPO_P
 copy_and_set_644_permissions "$TEMPLATE_REPO_PATH/.gitpod.yml" "$TARGET_REPO_PATH"
 
 echo "Update complete."
+```
+
+If you want to add .Rbuildignore, EntireProject.code-workspace and `repos-to-clone.list` as well, then run the following, too:
+
+```bash
+# Update .Rbuildignore
+copy_and_set_644_permissions "$TEMPLATE_REPO_PATH/.Rbuildignore" "$TARGET_REPO_PATH"
+# Update EntireProject.code-workspace
+copy_and_set_644_permissions "$TEMPLATE_REPO_PATH/EntireProject.code-workspace" "$TARGET_REPO_PATH"
+# Update repos-to-clone.list
+copy_and_set_644_permissions "$TEMPLATE_REPO_PATH/repos-to-clone.list" "$TARGET_REPO_PATH"
+```
