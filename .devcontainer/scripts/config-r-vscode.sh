@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Last modified: 2023 Nov 24
+# Last modified: 2023 Nov 30
 
 # This script is used to configure R settings in Visual Studio Code (VSCode) for GitPod or Codespace environments.
 # It sets the `r.libPaths` VS Code settings to the default `.libPaths()` output
