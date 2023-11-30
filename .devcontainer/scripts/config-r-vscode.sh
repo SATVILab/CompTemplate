@@ -47,24 +47,29 @@ update_json_if_needed() {
     for path in "${paths[@]}"; do
         if [[ "$path" =~ $version_regex ]]; then
             has_version_path=true
-            if [[ "$path" == "$r_version" ]]; then
+            if [[ "$path" =~ $r_version ]]; then
                 # The current version is already in the paths, no need to update
                 return 0
             fi
         fi
     done
 
-    if [[ "$has_version_path" == false || "$has_version_path" == true ]]; then
-        # Update the JSON file as the current R version is not in the paths
-        local new_array=$(Rscript --vanilla -e "cat(.libPaths(), sep = '\n')" | sed ':a;N;$!ba;s/\n/", "/g' | sed 's/^/["/' | sed 's/$/"]/')
-        jq --arg key "$new_key" --argjson value "$new_array" '. + {($key): $value}' $path_file_json > temp.json && mv temp.json $path_file_json
+    if [[ "$has_version_path" == true ]]; then
+        echo "Update r.libPaths key"
+        update_json
     fi
+}
+
+update_json() {
+    local new_array=$(Rscript --vanilla -e "cat(.libPaths(), sep = '\n')" | sed ':a;N;$!ba;s/\n/", "/g' | sed 's/^/["/' | sed 's/$/"]/')
+    jq --arg key "$new_key" --argjson value "$new_array" '. + {($key): $value}' $path_file_json > temp.json && mv temp.json $path_file_json
 }
 
 # Check if r.libPaths exists and if the current R version is not in its values
 if jq -e ". | has(\"$new_key\")" "$path_file_json" > /dev/null; then
     update_json_if_needed
 else
+    echo "Add r.libPaths key"
     # r.libPaths key doesn't exist, so proceed to add it
-    update_json_if_needed
+    update_json
 fi
