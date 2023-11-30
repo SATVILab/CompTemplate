@@ -51,6 +51,7 @@ update_json_if_needed() {
                 # The current version is already in the paths, no need to update
                 return 0
             fi
+            break
         fi
     done
 
