@@ -36,11 +36,11 @@ copy_and_set_644_permissions() {
     chmod -R u+rw,go+r,go-w "$dest"
 }
 
-# Update .devcontainer
-copy_and_set_755_permissions "$TEMPLATE_REPO_PATH/.devcontainer/scripts" "$TARGET_REPO_PATH/scripts"
+# Update .devcontainer with scripts
+copy_and_set_755_permissions "$TEMPLATE_REPO_PATH/.devcontainer/scripts" "$TARGET_REPO_PATH/.devcontainer/scripts"
 
 # Update .devcontainer/devcontainer.json
-copy_and_set_644_permissions "$TEMPLATE_REPO_PATH/.devcontainer" "$TARGET_REPO_PATH"
+copy_and_set_644_permissions "$TEMPLATE_REPO_PATH/.devcontainer/devcontainer.json" "$TARGET_REPO_PATH/.devcontainer"
 
 # Update .gitpod.yml
 copy_and_set_644_permissions "$TEMPLATE_REPO_PATH/.gitpod.yml" "$TARGET_REPO_PATH"
