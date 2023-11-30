@@ -30,14 +30,16 @@ if [ ! -f "$path_file_json" ]; then
     echo "{}" > "$path_file_json"
 fi
 
+# Get the current R version prepended with a forward slash
+r_version=$(R --version | grep 'R version' | awk '{print $3}' | sed 's/^/\//')
+
 # Define the new key and value you want to add
 new_key="r.libPaths"
 
-# only run if  r.libPaths does not already exist in the JSON file
-if ! jq -e ". | has(\"$new_key\")" "$path_file_json" > /dev/null; then
-    # get the value(s) to add.
-    # --vanilla to avoid `renv` settings coming in
+# Check if r.libPaths exists and if the current R version is not in its values
+if ! jq -e ". | select(has(\"$new_key\")) | .\"$new_key\"[] | contains(\"$r_version\")" "$path_file_json" > /dev/null; then
+    # get the value(s) to add
     new_array=$(Rscript --vanilla -e "setwd(tempdir()); cat(.libPaths(), sep = '\n')" | sed ':a;N;$!ba;s/\n/", "/g' | sed 's/^/["/' | sed 's/$/"]/')
-    # Add the key-value pair to the JSON file
+    # Add or update the key-value pair in the JSON file
     jq --arg key "$new_key" --argjson value "$new_array" '. + {($key): $value}' $path_file_json > temp.json && mv temp.json $path_file_json
 fi
