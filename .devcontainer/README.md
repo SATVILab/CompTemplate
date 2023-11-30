@@ -37,7 +37,7 @@ copy_and_set_644_permissions() {
 }
 
 # Update .devcontainer
-copy_and_set_755_permissions "$TEMPLATE_REPO_PATH/.devcontainer/scripts" "$TARGET_REPO_PATH"
+copy_and_set_755_permissions "$TEMPLATE_REPO_PATH/.devcontainer/scripts" "$TARGET_REPO_PATH/scripts"
 
 # Update .devcontainer/devcontainer.json
 copy_and_set_644_permissions "$TEMPLATE_REPO_PATH/.devcontainer" "$TARGET_REPO_PATH"
