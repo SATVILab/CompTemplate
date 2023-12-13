@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Last modified: 2023 Nov 24
+# Last modified: 2023 Dec 13
 
 # Script for configuring the R environment in GitHub Codespaces or GitPod
 # - Ensures GH_TOKEN, GITHUB_TOKEN and GITHUB_PAT are all set
@@ -11,6 +11,9 @@
 #   correctly)
 # - Configures R_LIBS directory for package installations
 #   outside of container environments.
+# - Making linting less aggressive
+#   - Ignore object length and snake/camel case
+# - Ensure key R packages up to date
 
 #!/usr/bin/env bash
 # github token
