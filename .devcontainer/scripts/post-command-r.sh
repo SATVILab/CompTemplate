@@ -7,6 +7,8 @@
 # 4. Adds the `config-r-vscode.sh` file to be sourced if it's not already present in the case of CodeSpaces.
 # 5. Sources the `config-r-vscode.sh` file in the case of CodeSpaces.
 
+project_root="$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)" 
+
 echo "set up further R config"
 # add config-r.sh
 if ! [ -d "$HOME/.bashrc.d" ]; then mkdir -p "$HOME/.bashrc.d"; fi
