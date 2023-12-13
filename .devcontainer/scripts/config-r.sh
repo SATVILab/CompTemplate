@@ -76,11 +76,3 @@ if [ ! -f "$HOME/.lintr" ]; then
   object_name_linter = NULL)
 " > "$HOME/.lintr"
 fi
-
-# ensure that key VS Code packages are up to date.
-# install dev version of `renv` as it's pretty reliable
-# and does not take long to install.
-pushd "$HOME"
-Rscript -e 'install.packages(c("jsonlite", "languageserver", "pak"))' \
-  -e 'remotes::install_github("rstudio/renv")'
-popd
