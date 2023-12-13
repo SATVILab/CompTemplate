@@ -78,5 +78,5 @@ fi
 # and does not take long to install.
 pushd "$HOME"
 Rscript -e 'install.packages(c("jsonlite", "languageserver", "pak"))' \
-  -e 'remotes::install_github(c("rstudio/renv"))'
+  -e 'remotes::install_github("rstudio/renv")'
 popd
