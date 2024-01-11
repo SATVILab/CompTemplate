@@ -1,4 +1,4 @@
-#!/user/bin/env bash
+#!/usr/bin/env bash
 # Last modified: 2024 Jan 11
 # Source: https://xethub.com/assets/docs/getting-started/install
 
