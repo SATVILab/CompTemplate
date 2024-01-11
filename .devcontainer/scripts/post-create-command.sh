@@ -21,3 +21,6 @@ project_root="$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)"
 
 # install latest versions of R packages
 "$project_root/.devcontainer/scripts/post-create-command-r.sh"
+
+# install xet
+"$project_root/.devcontainer/scripts/install-xet.sh"
