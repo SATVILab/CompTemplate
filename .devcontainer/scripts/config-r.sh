@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Last modified: 2023 Dec 13
+# Last modified: 2024 Jan 11
 
 # Script for configuring the R environment in GitHub Codespaces or GitPod
 # - Ensures GH_TOKEN, GITHUB_TOKEN and GITHUB_PAT are all set
@@ -15,7 +15,6 @@
 #   - Ignore object length and snake/camel case
 # - Ensure key R packages up to date
 
-#!/usr/bin/env bash
 # github token
 if [ -n "$GH_TOKEN" ]; then 
   export GITHUB_PAT="${GITHUB_PAT:-"$GH_TOKEN"}"
