@@ -15,7 +15,7 @@ parent_dir="$(cd "${current_dir}/.." && pwd)"
 clone-repo() {
     cd "${parent_dir}"
     if [ ! -d "${1#*/}" ]; then
-        git xet clone --lazy "xet://${XETHUB_USERNAME}/$1"
+        git xet clone --lazy "xet://$1"
     else 
         echo "Already cloned $1"
     fi
