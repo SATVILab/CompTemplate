@@ -21,6 +21,3 @@ project_root="$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)"
 
 # set up repos
 "$project_root/.devcontainer/scripts/post-command-repos.sh"
-
-# authenticate to xet
-"$project_root/.devcontainer/scripts/authenticate-xethub.sh"
