@@ -3,6 +3,7 @@
 ^\.devcontainer$
 ^\.devcontainer/
 ^repos-to-clone\.list$
+^repos-to-clone-xethub\.list$
 ^\.gitpod\.yml$
 ^\.Renviron$
 ^EntireProject\.code-workspace$

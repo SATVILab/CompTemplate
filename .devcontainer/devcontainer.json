@@ -9,8 +9,11 @@
  */
 {
 	"image": "ghcr.io/rocker-org/devcontainer/geospatial:4",
-	"postCreateCommand": "chmod 755 .devcontainer/scripts/*sh && .devcontainer/scripts/post-create-command.sh",
-	"postStartCommand": "chmod 755 .devcontainer/scripts/*sh && .devcontainer/scripts/post-start-command.sh",
+	"features": {
+		"ghcr.io/MiguelRodo/DevContainerFeatures/git-xet:1": {},
+		"ghcr.io/MiguelRodo/DevContainerFeatures/repos:1": {},
+		"ghcr.io/MiguelRodo/DevContainerFeatures/config-r:1": {}
+	},
 	"customizations": {
 		"vscode": {
 			"extensions": [
