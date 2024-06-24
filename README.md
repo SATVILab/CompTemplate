@@ -12,7 +12,7 @@ For more information, please contact:
 
 ## Links
 
-- `[URLs to data sources (e.g. OneDrive), GitHub repos , publications, etc.]`
+- `[URLs to data sources (e.g. OneDrive), GitHub repos, publications, etc.]`
 
 ## Details
 
