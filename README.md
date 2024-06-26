@@ -12,7 +12,7 @@ For more information, please contact:
 
 ## Links
 
-- `[URLs to data sources (e.g. OneDrive), GitHub repos , publications, etc.]`
+- `[URLs to data sources (e.g. OneDrive), GitHub repos, publications, etc.]`
 
 ## Details
 
@@ -21,7 +21,7 @@ For more information, please contact:
 #### GitHub Codespaces
 
 - Ensure that the GitHub Codespace has access to the following environment variables:
-  - `GITHUB_USERNAME`: your GitHub user name
+  - `GITHUB_USER`: your GitHub user name (set by default in GitHub Codespaces)
   - `GITHUB_PAT`: PAT for GitHub
   - *If project uses XetHub*:
     - `XETHUB_USERNAME`: Username for XetHub
