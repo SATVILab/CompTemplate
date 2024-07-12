@@ -18,11 +18,7 @@
 		"vscode": {
 			"extensions": [
 				"quarto.quarto",
-				"GitHub.copilot",
-				"GitHub.copilot-chat",
 				"REditorSupport.r",
-				"bierner.markdown-preview-github-styles",
-				"eamodio.gitlens",
 				"mathematic.vscode-pdf"
 			]
 		}
