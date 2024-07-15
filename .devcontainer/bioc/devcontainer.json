@@ -13,7 +13,7 @@
     "ghcr.io/MiguelRodo/DevContainerFeatures/repos:1": {},
     "ghcr.io/MiguelRodo/DevContainerFeatures/config-r:1": {},
     "ghcr.io/rocker-org/devcontainer-features/r-rig:1": {
-      "installDevTools": true,
+      "installDevTools": false,
       "installREnv": true,
       "installRadian": true,
       "version": "none",
