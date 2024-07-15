@@ -21,7 +21,6 @@ For more information, please contact:
 #### GitHub Codespaces
 
 - Ensure that the GitHub Codespace has access to the following environment variables:
-  - `GITHUB_USER`: your GitHub user name (set by default in GitHub Codespaces)
   - `GH_TOKEN`: Classic PAT for GitHub
   - *If project uses XetHub*:
     - `XETHUB_USERNAME`: Username for XetHub
