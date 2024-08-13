@@ -12,7 +12,11 @@
 			"pakVersion": "auto",
 			"vscodeRSupport": "full",
 			"pandocVersion": "auto"
-		}
+		},
+		"ghcr.io/devcontainers/features/aws-cli:1": {
+			"version": "latest"
+		},
+		"ghcr.io/guiyomh/features/vim:0": {}
 	},
 	"customizations": {
 		"vscode": {
