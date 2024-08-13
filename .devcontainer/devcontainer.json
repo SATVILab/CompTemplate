@@ -16,9 +16,11 @@
 		"ghcr.io/devcontainers/features/aws-cli:1": {
 			"version": "latest"
 		},
-		"ghcr.io/guiyomh/features/vim:0": {},
 		"ghcr.io/devcontainers-contrib/features/vscode-cli:1": {},
-		"ghcr.io/devcontainers-contrib/features/vscode-server:1": {}
+		"ghcr.io/devcontainers-contrib/features/vscode-server:1": {},
+		"ghcr.io/devcontainers-contrib/features/apt-get-packages:1": {
+			"packages": "xvfb,vim"
+		}
 	},
 	"customizations": {
 		"vscode": {
