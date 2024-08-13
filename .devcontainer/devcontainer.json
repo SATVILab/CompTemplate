@@ -1,7 +1,6 @@
 {
 	"image": "ghcr.io/rocker-org/devcontainer/geospatial:4.4",
 	"features": {
-		"ghcr.io/MiguelRodo/DevContainerFeatures/git-xet:1": {},
 		"ghcr.io/MiguelRodo/DevContainerFeatures/repos:1": {},
 		"ghcr.io/MiguelRodo/DevContainerFeatures/config-r:1": {},
 		"ghcr.io/rocker-org/devcontainer-features/r-rig:1": {
@@ -17,7 +16,6 @@
 			"version": "latest"
 		},
 		"ghcr.io/devcontainers-contrib/features/vscode-cli:1": {},
-		"ghcr.io/devcontainers-contrib/features/vscode-server:1": {},
 		"ghcr.io/devcontainers-contrib/features/apt-get-packages:1": {
 			"packages": "xvfb,vim"
 		}
