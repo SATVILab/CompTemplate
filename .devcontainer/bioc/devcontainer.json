@@ -12,7 +12,7 @@
       "vscodeRSupport": "full",
       "pandocVersion": "auto"
     },
-		"ghcr.io/devcontainers-contrib/features/vscode-cli:1": {}
+    "ghcr.io/devcontainers-contrib/features/vscode-cli:1": {}
   },
   "customizations": {
     "vscode": {
