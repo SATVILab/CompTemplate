@@ -1,0 +1,42 @@
+name: Add Issues to Project
+
+on:
+  workflow_dispatch:
+    inputs:
+      project_name:
+        description: "Project name. Defaults to current repository."
+        default: ""
+        required: false
+      project_owner:
+        description: "Project owner. Defaults to SATVILab."
+        required: false
+        default: SATVILab
+      is_project_owner_org:
+        description: "Whether the project owner is an organization. Defaults to `true`."
+        required: false
+        default: "true"
+      source_repo_name:
+        description: "Repository name. Defaults to current repository."
+        required: false
+      source_repo_owner:
+        description: "Repository owner. Defaults to SATVILab."
+        required: false
+        default: SATVILab
+
+jobs:
+  add-issues-to-project:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Run Add Issues to Project Action
+        uses: SATVILab/actions/add-issues-to-project@v1.1.0
+        with:
+          project_name: ${{ github.event.inputs.project_name }}
+          project_owner: ${{ github.event.inputs.project_owner }}
+          is_project_owner_org: ${{ github.event.inputs.is_project_owner_org }}
+          source_repo_name: ${{ github.event.inputs.source_repo_name }}
+          source_repo_owner: ${{ github.event.inputs.source_repo_owner }}
+          ADD_ISSUES_TO_PROJECT_TOKEN: ${{ secrets.ADD_ISSUES_TO_PROJECT_TOKEN }}
