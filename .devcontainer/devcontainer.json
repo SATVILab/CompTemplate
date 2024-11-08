@@ -25,5 +25,14 @@
 		"ghcr.io/devcontainers-contrib/features/apt-get-packages:1": {
 			"packages": "xvfb,vim,libcurl4-openssl-dev"
 		}
-  }
+  },
+	"customizations": {
+		"vscode": {
+			"extensions": [
+				"quarto.quarto",
+				"REditorSupport.r",
+				"mathematic.vscode-pdf"
+			]
+		}
+	}
 }
