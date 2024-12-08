@@ -1,5 +1,5 @@
 {
-  "name": "Modified Rocker Dev Container",
+  "name": "Modified Rocker/BioConductor Dev Container",
   "build": {
     "dockerfile": "Dockerfile.bioc",
     "context": ".."
