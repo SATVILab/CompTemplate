@@ -16,7 +16,7 @@
 			"installRadian": true,
 			"version": "none",
 			"pakVersion": "auto",
-			"vscodeRSupport": "full",
+			"vscodeRSupport": "minimal",
 			"pandocVersion": "auto"
 		},
 		"ghcr.io/devcontainers-contrib/features/vscode-cli:1": {},
