@@ -1,69 +1,103 @@
 # README
 
-The purpose of this repository is to
-`[briefly describe the compendium's goals and objectives]`
+This repository provides infastructure for the project to _[Briefly describe the aims and context of the analysis or research project here.]_
 
 ## Contact
 
-For more information, please contact:
-- `[Name]`, `[Email Address]`
-- `[Name]`, `[Email Address]`
+For more information, please contact:  
+- [Name], [Email Address]  
+- [Name], [Email Address]
 
 ## Links
 
-- `[URLs to data sources (e.g. OneDrive), GitHub repos, publications, etc.]`
+- [URLs to data sources (e.g. OneDrive), GitHub repositories, publications, etc.]
 
-## Details
+## Workspace setup
 
-### Setup
+This repository provides infrastructure for a multi-repository R-based research project.
+It can be used both to **set up a containerised development environment** and to **manage a VS Code workspace spanning multiple repositories** — both of which are optional.
 
-#### Multi-repository workspace
+<!--
 
-This repo can easily be used to set up a multi-repository workspace, on any operating system (Linux, macOS, Windows).
+You may use this repository:
 
-Firstly, specify the repositories you want to include in the workspace in the `repos-to-clone.list` file.
-This file should be located in the root directory of this repository.
-Instructions for how to set up the `repos-to-clone.list` file can be found in the header of that file.
+- as part of an existing project, to quickly reproduce or continue analysis, or  
+- as a starting point for new projects with similar infrastructure needs.
 
-Secondly, run `scripts/repos-clone.sh` to clone the repositories specified in the `repos-to-clone.list` file.
-It will work on all platforms (Linux, macOS, Windows) as long as Git is installed.
-If on Windows, run this using Git Bash (available if Git for Windows is installed).
+!-->
 
-Thirdly, if using VS Code, run `scripts/vscode-workspace-add.sh` to add the repos specified in the `repos-to-clone.list` file to a workspace file, `entire-project.code-workspace`.
-This will work as long as Python (any version) or `jq` is installed.
-Then open this repository inside VS Code, open the Command Palette (`Ctrl + Shift + P`), click on `File: Open Workspace from File...` and select `entire-project.code-workspace`.
+### Multi-repository workflow
 
-#### R containers
+This repo supports easy setup of a multi-repository workspace on Linux, macOS or Windows.
 
-Within the `.devcontainer` directory, a `devcontainer.json` file is provided to set up a development container for this repository.
-It specifies a container image appropriate for `R` analyses on any Linux system, including GitHub Codespaces and Windows Subsystem for Linux (WSL).
+1. **Specify repositories**  
+   Edit `repos-to-clone.list` in the root. See its header for format details.
 
-##### Base image
+2. **Clone repositories**  
+   ```bash
+   scripts/clone-repos.sh
+   ```
 
-By default, the container will be built upon `bioconductor/bioconductor_docker:RELEASE_3_20`, the current latest BioConductor image release.
-The advantage of this is that it has pre-built binaries for many `BioConductor` packages, which can significantly speed up the installation process.
-To use a different version of BioConductor, change the `image` field in the `devcontainer.json` file to the desired version (e.g. `bioconductor/bioconductor_docker:RELEASE_3_19`).
+  * Works on any OS with Git.
+  * On Windows, run in Git Bash (from Git for Windows).
 
-To use a non-BioConductor image, change the `FROM` line in the `Dockerfile` to the desired image, e.g. `FROM rocker/r-verse:4.4`.
+3. **Create a VS Code workspace (optional)**
 
-##### Features
+   ```bash
+   scripts/vscode-workspace-add.sh
+   ```
 
-The `devcontainer.json` file uses `devcontainer` features to install additional tools and packages:
+   * Requires any version of `Python` or the `jq` utility.
+   * Then in VS Code: **File → Open Workspace from File…** → select `entire-project.code-workspace`.
 
-- `Quarto` (with `TinyTex`, by default).
-- Various `Ubuntu` packages typically required.
-- `radian`, a modern R console appropriate for VS Code.
-- The `repos` feature, which automatically sets up the `repos-to-clone.list` file (does not depend on the `/scripts` folder) and authentication for private repositories to Git and HuggingFace that enables multi-repository authentication.
-- The `config-r` feature, which installs all packages inside `.devcontainer/renv/<dir>/renv.lock` files into the global package cache during the container build package. Note that multiple `renv` directories can be specified (change `<dir>`). This speeds up set up of the container once built dramatically if `renv` is used in the repositories.
+### R development container
 
-##### Building the container
+A ready-to-use devcontainer config is provided under `.devcontainer/devcontainer.json`.
 
-A GitHub Action is included (`.github/workflows/devcontainer-build.yml`) to build the container on every push to the `main` branch.
-By default, the container is stored in the `ghcr.io` registry, and is named `<repository_name>-<branch>`.
-By default, the container is built upon each push to the `main` branch.
-For public repositories, all builds and storing the packages are free, so we strongly recommend that this repo be made public (the repos specified in `repos-to-clone.list` can be private, so consider this an infrastructure repo and keep private code in other repos).
-If this is treated as an infrastructure repo, then changes will be infrequent, and so builds on each push are acceptable.
-However, this can be easily disabled by removing the `on.push` key from the `devcontainer-build.yml` file.
+#### Base image
 
-This GitHub Action also creates a `.devcontainer/prebuild/devcontainer.json` file, which uses the pre-built image on the `ghcr.io` registry.
-So, if you are using VS Code to open this repository, then if the container image has been built rather use the `prebuild/devcontainer.json` file.
+* By default, the Dockerfile starts with
+
+  ```dockerfile
+  FROM bioconductor/bioconductor_docker:RELEASE_3_20
+  ```
+
+  which gives you pre-built Bioconductor binaries.
+* To pick another Bioconductor release, change that `FROM` line (e.g. `RELEASE_3_19` instead of `RELEASE_3_20`).
+* To use a non-Bioconductor base (e.g. `rocker/r-verse:4.4`), update the same `FROM` line accordingly.
+
+#### Features
+
+The devcontainer includes:
+
+* **Quarto** (with TinyTeX)
+* Common Ubuntu packages for R/data science
+* **radian**, a modern R console
+* A **repos** feature to clone repos specified in `repos-to-clone.list`. Important primarily for GitHub Codespaces, as it overrides default `Codespaces` Git authentication. Ensure that the environment variable `GH_TOKEN` is available as a Codespaces secret, and that it has permissions to clone the specified repositories.
+* A **config-r** feature that pre-installs packages from any `.devcontainer/renv/<dir>/renv.lock` into the global cache for faster container starts once built. Multiple `<dir>`s can be specified to install packages from multiple lockfiles.
+
+#### Automated builds
+
+A GitHub Actions workflow (`.github/workflows/devcontainer-build.yml`) will:
+
+* Build the container on each push to `main` (or via manual dispatch).
+* Push images to GitHub Container Registry (`ghcr.io`) tagged by repo and branch.
+* Generate `.devcontainer/prebuild/devcontainer.json` pointing to the latest pre-built image, so VS Code can open almost instantly.
+
+To disable automatic builds, remove or comment out the `on.push` section in that workflow file.
+
+#### Dotfiles
+
+If running within a container, then typically additional configuration is convenient.
+For example, `radian` on Linux works poorly unless the option `auto_match` is set to `false`.
+
+A convenient way to say this is up is to use the `SATVILab/dotfiles` repository.
+After opening this repository in a container, run the following command:
+
+```bash
+git clone https://github.com/SATVILab/dotfiles.git ~/dotfiles
+cd ~/dotfiles
+./install-env.sh dev
+```
+
+See `https://github.dev/SATVILab/dotfiles` for more information on the dotfiles repository.
