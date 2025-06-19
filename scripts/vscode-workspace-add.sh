@@ -97,6 +97,7 @@ if command -v jq >/dev/null 2>&1; then
   fi
   echo "Updated '$workspace_file' with jq."
 elif command -v python >/dev/null 2>&1; then
+  # Use python if available
   python - "$workspace_file" <<'PYTHONEND'
 import sys, json
 ws = sys.argv[1]
@@ -104,7 +105,7 @@ paths = [line.rstrip('\n') for line in sys.stdin if line.strip()]
 try:
     with open(ws) as f:
         data = json.load(f)
-except FileNotFoundError:
+except Exception:
     data = {}
 data['folders'] = [{'path': p} for p in paths]
 with open(ws, 'w') as f:
@@ -113,7 +114,25 @@ with open(ws, 'w') as f:
 PYTHONEND
   printf '%s\n' "$paths_list" | python "$workspace_file"
   echo "Updated '$workspace_file' with Python."
+elif command -v python3 >/dev/null 2>&1; then
+  # Use python3 if available
+  python3 - "$workspace_file" <<'PYTHONEND'
+import sys, json
+ws = sys.argv[1]
+paths = [line.rstrip('\n') for line in sys.stdin if line.strip()]
+try:
+    with open(ws) as f:
+        data = json.load(f)
+except Exception:
+    data = {}
+data['folders'] = [{'path': p} for p in paths]
+with open(ws, 'w') as f:
+    json.dump(data, f, indent=2)
+    f.write('\n')
+PYTHONEND
+  printf '%s\n' "$paths_list" | python3 "$workspace_file"
+  echo "Updated '$workspace_file' with Python3."
 else
-  echo "Error: neither jq nor python found. Cannot update workspace." >&2
+  echo "Error: neither jq, python, nor python3 found. Cannot update workspace." >&2
   exit 1
 fi
