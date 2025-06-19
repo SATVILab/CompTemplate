@@ -26,25 +26,16 @@ Examples:
 EOF
 }
 
-# Default values
 repos_list_file="repos-to-clone.list"
 
-# POSIX-style arg parsing
 while [ "$#" -gt 0 ]; do
   case "$1" in
     -f|--file)
       shift
-      if [ "$#" -gt 0 ]; then
-        repos_list_file="$1"
-        shift
-      else
-        usage
-        exit 1
-      fi
+      [ "$#" -gt 0 ] && repos_list_file="$1" && shift || { usage; exit 1; }
       ;;
     -h|--help)
-      usage
-      exit 0
+      usage; exit 0
       ;;
     *)
       echo "Unknown argument: $1"
@@ -62,61 +53,67 @@ fi
 current_dir="$(pwd)"
 workspace_file="$current_dir/entire-project.code-workspace"
 
-# If the workspace file doesn’t exist, create a pretty-printed JSON stub
-if [ ! -f "$workspace_file" ]; then
-  # only if there’s at least one non-blank, non-comment line
-  if grep -qv '^[[:space:]]*$' "$repos_list_file" && grep -qv '^[[:space:]]*#' "$repos_list_file"; then
-    cat > "$workspace_file" <<EOF
-{
-  "folders": [
-    { "path": "." }
-  ]
-}
-EOF
-    echo "Created new workspace file: $workspace_file"
+# Always collect paths, starting with "."
+paths_list="."
+while IFS= read -r line || [ -n "$line" ]; do
+  case "$line" in ''|\#*) continue ;; esac
+  line="$(printf '%s\n' "$line" | sed -e 's/^[[:space:]]*//' -e 's/[[:space:]]*$//')"
+  [ -z "$line" ] && continue
+
+  repo_spec="$(printf '%s\n' "$line" | awk '{print $1}')"
+  target_dir="$(printf '%s\n' "$line" | awk '{print $2}')"
+  case "$repo_spec" in *@*) repo_url_no_branch="${repo_spec%@*}" ;; *) repo_url_no_branch="$repo_spec" ;; esac
+  dir="$(basename "$repo_url_no_branch" .git)"
+
+  if [ -n "$target_dir" ]; then
+    repo_path="$current_dir/$target_dir/$dir"
+  else
+    repo_path="$current_dir/$dir"
   fi
+
+  if command -v realpath >/dev/null 2>&1 && realpath --help 2>&1 | grep -q -- --relative-to; then
+    relative_repo_path="$(realpath --relative-to="$current_dir" "$repo_path" 2>/dev/null || printf '%s\n' "$repo_path")"
+  else
+    case "$repo_path" in
+      "$current_dir"/*) relative_repo_path="${repo_path#$current_dir/}" ;;
+      *)                relative_repo_path="$repo_path" ;;
+    esac
+  fi
+
+  # skip . (will add manually), prepend ../ for everything else
+  [ "$relative_repo_path" = "." ] && continue
+  paths_list="${paths_list}"$'\n'"../$relative_repo_path"
+done < "$repos_list_file"
+
+# Write or update the workspace file using jq or python
+if command -v jq >/dev/null 2>&1; then
+  folders_json=$(printf '%s\n' "$paths_list" | jq -R . | jq -s '[.[] | {path: .}]')
+  if [ ! -f "$workspace_file" ]; then
+    # New file
+    jq --null-input --argjson folders "$folders_json" '{folders: $folders}' > "$workspace_file"
+  else
+    tmp="$(mktemp)"
+    jq --argjson folders "$folders_json" '.folders = $folders' "$workspace_file" > "$tmp" && mv "$tmp" "$workspace_file"
+  fi
+  echo "Updated '$workspace_file' with jq."
+elif command -v python >/dev/null 2>&1; then
+  python - "$workspace_file" <<'PYTHONEND'
+import sys, json
+ws = sys.argv[1]
+paths = [line.rstrip('\n') for line in sys.stdin if line.strip()]
+try:
+    with open(ws) as f:
+        data = json.load(f)
+except FileNotFoundError:
+    data = {}
+data['folders'] = [{'path': p} for p in paths]
+with open(ws, 'w') as f:
+    json.dump(data, f, indent=2)
+    f.write('\n')
+PYTHONEND
+  printf '%s\n' "$paths_list" | python "$workspace_file"
+  echo "Updated '$workspace_file' with Python."
+else
+  echo "Error: neither jq nor python found. Cannot update workspace." >&2
+  exit 1
 fi
-
-add_to_workspace() {
-  local repos_file="$1"
-  local line repo_spec target_dir repo_url_no_branch dir repo_path relative_repo_path
-
-  while IFS= read -r line || [ -n "$line" ]; do
-    case "$line" in ''|\#*) continue ;; esac
-    line="$(printf '%s\n' "$line" | sed -e 's/^[[:space:]]*//' -e 's/[[:space:]]*$//')"
-    [ -z "$line" ] && continue
-
-    repo_spec="$(printf '%s\n' "$line" | awk '{print $1}')"
-    target_dir="$(printf '%s\n' "$line" | awk '{print $2}')"
-    case "$repo_spec" in *@*) repo_url_no_branch="${repo_spec%@*}" ;; *) repo_url_no_branch="$repo_spec" ;; esac
-    dir="$(basename "$repo_url_no_branch" .git)"
-
-    if [ -n "$target_dir" ]; then
-      repo_path="$current_dir/$target_dir/$dir"
-    else
-      repo_path="$current_dir/$dir"
-    fi
-
-    if command -v realpath >/dev/null 2>&1 && realpath --help 2>&1 | grep -q -- --relative-to; then
-      relative_repo_path="$(realpath --relative-to="$current_dir" "$repo_path" 2>/dev/null || printf '%s\n' "$repo_path")"
-    else
-      case "$repo_path" in
-        "$current_dir"/*) relative_repo_path="${repo_path#$current_dir/}" ;;
-        *)                relative_repo_path="$repo_path" ;;
-      esac
-    fi
-
-    if grep -q "\"path\"[[:space:]]*:[[:space:]]*\"$relative_repo_path\"" "$workspace_file"; then
-      continue
-    fi
-
-    sed -i.bak '/^[[:space:]]*]/i\
-    { "path": "'"$relative_repo_path"'" },' "$workspace_file" \
-     && rm -f "${workspace_file}.bak"
-
-    echo "Added '$relative_repo_path' to $workspace_file"
-  done < "$repos_file"
-}
-
-
-add_to_workspace "$repos_list_file"
