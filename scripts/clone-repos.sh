@@ -4,15 +4,14 @@
 set -e
 
 # --- Prerequisite checks ---
-if ! command -v git >/dev/null 2>&1; then
-  echo "Error: 'git' is not installed or not in PATH." >&2
-  exit 1
-fi
-
-if ! command -v awk >/dev/null 2>&1; then
-  echo "Error: 'awk' is required but not found in PATH." >&2
-  exit 1
-fi
+check_prerequisites() {
+  for cmd in git awk; do
+    if ! command -v "$cmd" >/dev/null 2>&1; then
+      echo "Error: '$cmd' is required but not found in PATH." >&2
+      exit 1
+    fi
+  done
+}
 
 usage() {
   cat <<EOF
@@ -30,51 +29,53 @@ Examples:
 EOF
 }
 
-# Default file
-repos_file="repos-to-clone.list"
+parse_args() {
+  REPOS_FILE="repos-to-clone.list"
+  while [ "$#" -gt 0 ]; do
+    case "$1" in
+      -f|--file)
+        shift
+        [ "$#" -gt 0 ] && REPOS_FILE="$1" || { usage; exit 1; }
+        shift
+        ;;
+      -h|--help)
+        usage; exit 0
+        ;;
+      *)
+        echo "Unknown arg: $1"
+        usage; exit 1
+        ;;
+    esac
+  done
+  if [ ! -f "$REPOS_FILE" ]; then
+    echo "File '$REPOS_FILE' not found."; exit 1
+  fi
+}
 
-# Arg parsing (POSIX)
-while [ "$#" -gt 0 ]; do
-  case "$1" in
-    -f|--file)
-      shift
-      [ "$#" -gt 0 ] && repos_file="$1" || { usage; exit 1; }
-      shift
-      ;;
-    -h|--help)
-      usage
-      exit 0
-      ;;
-    *)
-      echo "Unknown arg: $1"
-      usage
-      exit 1
-      ;;
-  esac
-done
-
-[ -f "$repos_file" ] || { echo "File '$repos_file' not found."; exit 1; }
-
-start_dir="$(pwd)"
-
-# read the repo list
-while IFS= read -r line || [ -n "$line" ]; do
-  # Skip comments/empty lines
-  case "$line" in \#*|"") continue ;; esac
-
-  # Parse repo_spec and target_dir (POSIX)
+parse_repo_line() {
+  # Outputs: repo_spec, target_dir
+  local line="$1"
+  local repo_spec target_dir
   repo_spec=$(echo "$line" | awk '{print $1}')
   target_dir=$(echo "$line" | awk '{print $2}')
+  echo "$repo_spec" "$target_dir"
+}
 
-  [ -z "$repo_spec" ] && continue
+clone_one_repo() {
+  # Arguments: repo_spec target_dir start_dir
+  local repo_spec="$1"
+  local target_dir="$2"
+  local start_dir="$3"
 
   # Parse @branch if present
+  local repo_url_no_branch branch
   case "$repo_spec" in
     *@*) repo_url_no_branch="${repo_spec%@*}"; branch="${repo_spec##*@}" ;;
     *) repo_url_no_branch="$repo_spec"; branch="" ;;
   esac
 
   # Compute remote and default folder
+  local repo_url repo_dir host
   case "$repo_url_no_branch" in
     https://*) repo_url="$repo_url_no_branch"
                repo_dir=$(basename "$repo_url_no_branch" .git)
@@ -97,6 +98,7 @@ while IFS= read -r line || [ -n "$line" ]; do
   esac
 
   # Use provided or default target dir
+  local dest
   if [ -n "$target_dir" ]; then
     dest="$start_dir/$target_dir"
   else
@@ -115,8 +117,25 @@ while IFS= read -r line || [ -n "$line" ]; do
     fi
   else
     echo "Already exists: $dest/$repo_dir"
-    # Optionally: git pull/update here if you want
+    # Optionally: git -C "$repo_dir" pull
   fi
 
   cd "$start_dir"
-done < "$repos_file"
+}
+
+main() {
+  check_prerequisites
+  parse_args "$@"
+  local start_dir
+  start_dir="$(pwd)"
+
+  while IFS= read -r line || [ -n "$line" ]; do
+    case "$line" in \#*|"") continue ;; esac
+    set -- $(parse_repo_line "$line")
+    local repo_spec="$1" target_dir="$2"
+    [ -z "$repo_spec" ] && continue
+    clone_one_repo "$repo_spec" "$target_dir" "$start_dir"
+  done < "$REPOS_FILE"
+}
+
+main "$@"
