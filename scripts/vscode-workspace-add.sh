@@ -52,6 +52,10 @@ fi
 
 current_dir="$(pwd)"
 workspace_file="$current_dir/entire-project.code-workspace"
+workspace_file_camel="$current_dir/EntireProject.code-workspace"
+if ! [ -f "$workspace_file" ] && [ -f "$workspace_file_camel" ]; then
+  workspace_file="$workspace_file_camel"
+fi
 
 # Always collect paths, starting with "."
 paths_list="."
