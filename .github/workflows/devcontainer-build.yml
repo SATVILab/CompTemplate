@@ -6,6 +6,8 @@ on:
     # To enable auto-runs on *all* branches, change to:
     # branches:
     #   - '**'
+    # To disable (to avoid any auto-runs),
+    # remove this `push` section entirely.
     branches:
       - 'main'
   workflow_dispatch:

@@ -1,7 +1,7 @@
 {
   "name": "Modified Rocker/BioConductor Dev Container",
   "build": {
-    "dockerfile": "Dockerfile.bioc",
+    "dockerfile": "Dockerfile",
     "context": ".."
   },
   "features": {
