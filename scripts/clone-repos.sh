@@ -135,7 +135,7 @@ main() {
     set -- $(parse_repo_line "$line")
     local repo_spec="$1" target_dir="$2"
     [ -z "$repo_spec" ] && continue
-    clone_one_repo "$repo_spec" "$target_dir" "$start_dir"
+    clone_one_repo "$repo_spec" "$target_dir" "$parent_dir"
   done < "$REPOS_FILE"
 }
 
