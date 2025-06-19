@@ -2,6 +2,8 @@
 
 This repository provides infastructure for the project to _[Briefly describe the aims and context of the analysis or research project here.]_
 
+See [Workspace setup](#workspace-setup) for details on how to set up a [multi-repository R-based development environment](#multi-repository-workflow) and a [containerised development environment](#r-development-container) for this project.
+
 ## Contact
 
 For more information, please contact:  
@@ -11,6 +13,10 @@ For more information, please contact:
 ## Links
 
 - [URLs to data sources (e.g. OneDrive), GitHub repositories, publications, etc.]
+
+## Details
+
+[Methods, timeline, team, data sources, software/tools, etc.]
 
 ## Workspace setup
 
@@ -95,9 +101,8 @@ A convenient way to say this is up is to use the `SATVILab/dotfiles` repository.
 After opening this repository in a container, run the following command:
 
 ```bash
-git clone https://github.com/SATVILab/dotfiles.git ~/dotfiles
-cd ~/dotfiles
-./install-env.sh dev
+git clone https://github.com/SATVILab/dotfiles.git "$HOME"/dotfiles
+"$HOME"/dotfiles/install-env.sh dev
 ```
 
 See `https://github.dev/SATVILab/dotfiles` for more information on the dotfiles repository.
