@@ -82,33 +82,21 @@ add_to_workspace() {
   local line repo_spec target_dir repo_url_no_branch dir repo_path relative_repo_path
 
   while IFS= read -r line || [ -n "$line" ]; do
-    # skip empty lines and lines that start (after trimming) with #
-    case "$line" in
-      ''|\#*) continue ;;
-    esac
-
-    # trim leading+trailing whitespace
+    case "$line" in ''|\#*) continue ;; esac
     line="$(printf '%s\n' "$line" | sed -e 's/^[[:space:]]*//' -e 's/[[:space:]]*$//')"
     [ -z "$line" ] && continue
 
-    # split into repo_spec and optional target_dir
     repo_spec="$(printf '%s\n' "$line" | awk '{print $1}')"
     target_dir="$(printf '%s\n' "$line" | awk '{print $2}')"
-
-    # strip off any @branch suffix
     case "$repo_spec" in *@*) repo_url_no_branch="${repo_spec%@*}" ;; *) repo_url_no_branch="$repo_spec" ;; esac
-
-    # basename minus .git
     dir="$(basename "$repo_url_no_branch" .git)"
 
-    # build absolute path
     if [ -n "$target_dir" ]; then
       repo_path="$current_dir/$target_dir/$dir"
     else
       repo_path="$current_dir/$dir"
     fi
 
-    # make it relative to $current_dir
     if command -v realpath >/dev/null 2>&1 && realpath --help 2>&1 | grep -q -- --relative-to; then
       relative_repo_path="$(realpath --relative-to="$current_dir" "$repo_path" 2>/dev/null || printf '%s\n' "$repo_path")"
     else
@@ -118,18 +106,17 @@ add_to_workspace() {
       esac
     fi
 
-    # skip if already in the JSON
     if grep -q "\"path\"[[:space:]]*:[[:space:]]*\"$relative_repo_path\"" "$workspace_file"; then
       continue
     fi
 
-    # insert just before the closing bracket of the folders array
-    # uses sed -i.bak for cross-platform in-place editing, then removes the .bak
-    sed -i.bak "/^[[:space:]]*]/i\\
-    { \"path\": \"$relative_repo_path\" }," "$workspace_file" && rm -f "${workspace_file}.bak"
+    sed -i.bak '/^[[:space:]]*]/i\
+    { "path": "'"$relative_repo_path"'" },' "$workspace_file" \
+     && rm -f "${workspace_file}.bak"
 
     echo "Added '$relative_repo_path' to $workspace_file"
   done < "$repos_file"
 }
+
 
 add_to_workspace "$repos_list_file"
