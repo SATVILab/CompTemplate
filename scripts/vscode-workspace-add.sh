@@ -97,12 +97,10 @@ if command -v jq >/dev/null 2>&1; then
   fi
   echo "Updated '$workspace_file' with jq."
 elif command -v python >/dev/null 2>&1; then
-  tmp_paths="$(mktemp)"
-  printf '%s\n' "$paths_list" > "$tmp_paths"
-  python - "$workspace_file" < "$tmp_paths" <<'PYTHONEND'
-import sys, json
+  PATHS_LIST="$paths_list" python - "$workspace_file" <<'PYTHONEND'
+import sys, json, os
 ws = sys.argv[1]
-paths = [line.rstrip('\n') for line in sys.stdin if line.strip()]
+paths = [line for line in os.environ['PATHS_LIST'].splitlines() if line.strip()]
 try:
     with open(ws) as f:
         data = json.load(f)
@@ -113,15 +111,12 @@ with open(ws, 'w') as f:
     json.dump(data, f, indent=2)
     f.write('\n')
 PYTHONEND
-  rm -f "$tmp_paths"
   echo "Updated '$workspace_file' with Python."
 elif command -v python3 >/dev/null 2>&1; then
-  tmp_paths="$(mktemp)"
-  printf '%s\n' "$paths_list" > "$tmp_paths"
-  python3 - "$workspace_file" < "$tmp_paths" <<'PYTHONEND'
-import sys, json
+  PATHS_LIST="$paths_list" python3 - "$workspace_file" <<'PYTHONEND'
+import sys, json, os
 ws = sys.argv[1]
-paths = [line.rstrip('\n') for line in sys.stdin if line.strip()]
+paths = [line for line in os.environ['PATHS_LIST'].splitlines() if line.strip()]
 try:
     with open(ws) as f:
         data = json.load(f)
@@ -132,7 +127,6 @@ with open(ws, 'w') as f:
     json.dump(data, f, indent=2)
     f.write('\n')
 PYTHONEND
-  rm -f "$tmp_paths"
   echo "Updated '$workspace_file' with Python3."
 
 else
