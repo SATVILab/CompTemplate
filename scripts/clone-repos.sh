@@ -128,6 +128,7 @@ main() {
   parse_args "$@"
   local start_dir
   start_dir="$(pwd)"
+  parent_dir="$(dirname "$start_dir")"
 
   while IFS= read -r line || [ -n "$line" ]; do
     case "$line" in \#*|"") continue ;; esac
