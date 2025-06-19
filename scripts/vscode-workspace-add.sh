@@ -128,8 +128,24 @@ with open(ws, 'w') as f:
     f.write('\n')
 PYTHONEND
   echo "Updated '$workspace_file' with Python3."
+elif command -v py >/dev/null 2>&1; then
+  PATHS_LIST="$paths_list" py - "$workspace_file" <<'PYTHONEND'
+import sys, json, os
+ws = sys.argv[1]
+paths = [line for line in os.environ['PATHS_LIST'].splitlines() if line.strip()]
+try:
+    with open(ws) as f:
+        data = json.load(f)
+except Exception:
+    data = {}
+data['folders'] = [{'path': p} for p in paths]
+with open(ws, 'w') as f:
+    json.dump(data, f, indent=2)
+    f.write('\n')
+PYTHONEND
+  echo "Updated '$workspace_file' with py launcher."
 
 else
-  echo "Error: neither jq, python, nor python3 found. Cannot update workspace." >&2
+  echo "Error: none of jq, python, python3 or py found. Cannot update workspace." >&2
   exit 1
 fi
