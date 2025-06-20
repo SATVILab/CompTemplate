@@ -1,5 +1,5 @@
 # Use the official Ubuntu image as the base
-FROM rocker/verse:4.4
+FROM bioconductor/bioconductor_docker:RELEASE_3_20
 
 # Avoid interactive prompts during package installation
 ENV DEBIAN_FRONTEND=noninteractive
