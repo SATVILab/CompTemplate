@@ -76,18 +76,20 @@ parse_args() {
 
 # --- determine inclusion/exclusion ---
 should_process() {
+  local name="$1"
   if [ "${#INCLUDE[@]}" -gt 0 ]; then
-    local found=""
+    local found=0
     for inc in "${INCLUDE[@]}"; do
       [ "$inc" = "$name" ] && found=1
     done
-    [ -n "$found" ] || return 1
+    [ $found -eq 1 ] || return 1
   fi
   if [ "${#EXCLUDE[@]}" -gt 0 ]; then
     for exc in "${EXCLUDE[@]}"; do
       [ "$exc" = "$name" ] && return 1
     done
   fi
+  return 0
 }
 
 # --- parse a repo line robustly ---
