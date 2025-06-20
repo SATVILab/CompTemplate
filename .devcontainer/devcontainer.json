@@ -31,7 +31,10 @@
       "extensions": [
 				"quarto.quarto",
 				"REditorSupport.r",
-				"mathematic.vscode-pdf"
+				"mathematic.vscode-pdf",
+        "GitHub.copilot",
+				"GitHub.copilot-chat",
+        "bierner.markdown-preview-github-styles"
       ]
     }
   }
