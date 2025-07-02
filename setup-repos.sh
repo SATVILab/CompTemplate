@@ -13,8 +13,8 @@ PERMISSIONS_OPT=""
 TOOL_OPT=""
 
 CODESPACES_SCRIPT="$PROJECT_ROOT/scripts/codespaces-auth-add.sh"
-CREATE_SCRIPT   ="$PROJECT_ROOT/scripts/create-repos.sh"
-CLONE_SCRIPT    ="$PROJECT_ROOT/scripts/clone-repos.sh"
+CREATE_SCRIPT="$PROJECT_ROOT/scripts/create-repos.sh"
+CLONE_SCRIPT="$PROJECT_ROOT/scripts/clone-repos.sh"
 WORKSPACE_SCRIPT="$PROJECT_ROOT/scripts/vscode-workspace-add.sh"
 
 usage() {
