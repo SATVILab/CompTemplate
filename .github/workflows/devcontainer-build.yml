@@ -10,6 +10,10 @@ on:
     # remove this `push` section entirely.
     branches:
       - 'main'
+    paths:
+      - '.devcontainer/renv/**'
+      - '.devcontainer/devcontainer.json'
+      - '.devcontainer/Dockerfile'
   workflow_dispatch:
     inputs:
       branch:
