@@ -2,7 +2,9 @@
 # create-repos.sh — create GitHub repos (with branches) from a list
 # Requires: bash 3.2+, curl
 
-set -euo pipefail
+set -o errexit   # same as -e
+set -o nounset   # same as -u
+set -o pipefail
 
 # ── CONFIG & USAGE ─────────────────────────────────────────────────────────────
 if [ ! -f "repos.list" ] && [ -f "repos-to-clone.list" ]; then

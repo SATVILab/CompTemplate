@@ -4,7 +4,9 @@
 # Adds GitHub repo permissions into .devcontainer/devcontainer.json
 # Compatible with Bash 3.2
 
-set -euo pipefail
+set -o errexit   # same as -e
+set -o nounset   # same as -u
+set -o pipefail
 
 # ——— Defaults ———————————————————————————————————————————————
 SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"

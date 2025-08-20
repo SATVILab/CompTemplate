@@ -10,6 +10,10 @@ on:
     # remove this `push` section entirely.
     branches:
       - 'main'
+    paths:
+      - '.devcontainer/renv/**'
+      - '.devcontainer/devcontainer.json'
+      - '.devcontainer/Dockerfile'
   workflow_dispatch:
     inputs:
       branch:
@@ -95,7 +99,7 @@ jobs:
         uses: devcontainers/ci@v0.3
         with:
           imageName: ${{ env.IMAGE_NAME }}
-          cacheFrom: ${{ env.USE_CACHE_FROM == 'true' && env.IMAGE_NAME || '' }}
+          push: always
 
       - name: Update or create prebuild/devcontainer.json
         run: |
