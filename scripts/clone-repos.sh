@@ -94,36 +94,26 @@ parse_repo_line() {
     #   - Recognised options: -a | --all-branches
     #   - The first non-option token is target_dir (must not start with '-').
     #   - Unknown options are warned and ignored.
+    set -f                     # disable globbing
     local line="$1"
     local repo_spec target_dir="" all_branches=0
 
-    # Split into words (Bash 3.2 safe; no arrays here)
     set -- $line
-    [ "$#" -eq 0 ] && { echo "" "" 0; return 0; }
+    [ "$#" -eq 0 ] && { printf '%s\x1f%s\x1f%s\n' "" "" "0"; set +f; return 0; }
 
     repo_spec="$1"; shift
-
     while [ "$#" -gt 0 ]; do
         case "$1" in
-            -a|--all-branches)
-                all_branches=1
-                ;;
-            -*)
-                echo "Warning: ignoring unknown option '$1' on line: $line" >&2
-                ;;
-            *)
-                if [ -z "$target_dir" ]; then
-                    target_dir="$1"
-                else
-                    echo "Error: multiple target directories on one line: $line" >&2
-                    return 1
-                fi
-                ;;
+            -a|--all-branches) all_branches=1 ;;
+            -*) echo "Warning: ignoring unknown option '$1' on line: $line" >&2 ;;
+            *)  if [ -z "$target_dir" ]; then target_dir="$1"
+                else echo "Error: multiple target directories on one line: $line" >&2; set +f; return 1
+                fi ;;
         esac
         shift
     done
-
-    echo "$repo_spec" "$target_dir" "$all_branches"
+    printf '%s\x1f%s\x1f%s\n' "$repo_spec" "$target_dir" "$all_branches"
+    set +f                     # re-enable globbing
 }
 
 clone_one_repo() {
@@ -173,12 +163,10 @@ clone_one_repo() {
 
     # Build clone options (arrays are fine in Bash 3.2)
     local clone_opts=()
-    if [ "$all_branches" -eq 0 ]; then
+    if [ "${all_branches:-0}" -eq 0 ]; then
         clone_opts=(--single-branch)
     fi
-    if [ -n "$ref" ]; then
-        clone_opts=("${clone_opts[@]}" --branch "$ref")
-    fi
+    [ -n "$ref" ] && clone_opts=("${clone_opts[@]}" --branch "$ref")
 
     git clone "${clone_opts[@]}" "$repo_url" "$dest"
 }
@@ -193,27 +181,30 @@ main() {
     parent_dir="$(dirname "$start_dir")"
 
     while IFS= read -r line || [ -n "$line" ]; do
-        # Trim leading whitespace
+        # lstrip
         local trimmed="${line#"${line%%[![:space:]]*}"}"
-        # Skip blank lines or lines whose first non-space char is '#'
-        if [ -z "$trimmed" ] || [ "${trimmed:0:1}" = "#" ]; then
-            continue
-        fi
+        # strip inline comments and rstrip
+        trimmed="${trimmed%%#*}"
+        trimmed="${trimmed%"${trimmed##*[![:space:]]}"}"
+        trimmed=${trimmed%$'\r'}  # handle CRLF
 
-        # Parse with proper error propagation
+        # Skip blanks
+        [ -z "$trimmed" ] && continue
+
+        # Parse
         local parsed
         if ! parsed="$(parse_repo_line "$trimmed")"; then
             echo "Failed to parse line: $line" >&2
             exit 1
         fi
 
-        # Unpack parsed fields
-        set -- $parsed
-        local repo_spec="$1" target_dir="$2" all_branches="$3"
+        # Unpack (preserves empties)
+        IFS=$'\x1f' read -r repo_spec target_dir all_branches <<<"$parsed"
         [ -z "$repo_spec" ] && continue
 
         clone_one_repo "$repo_spec" "$target_dir" "$parent_dir" "$all_branches"
     done <"$REPOS_FILE"
 }
+
 
 main "$@"
