@@ -245,8 +245,9 @@ build_paths_list() {
     
     [[ "$debug" == true ]] && echo "[DEBUG] Processing line: $trimmed" >&2
 
-    # Parse the line
+    # Parse the line (word splitting is intentional)
     set -f
+    # shellcheck disable=SC2086
     set -- $trimmed
     [ "$#" -eq 0 ] && { set +f; continue; }
     

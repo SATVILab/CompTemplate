@@ -4,7 +4,7 @@
       "path": "."
     },
     {
-      "path": "../analysis"
+      "path": "../CompTemplate-analysis"
     },
     {
       "path": "../paper"
@@ -32,6 +32,12 @@
     },
     {
       "path": "../Analysis-special-branch"
+    },
+    {
+      "path": "../DataTidy"
+    },
+    {
+      "path": "../data-tidy-feature"
     }
   ]
 }
