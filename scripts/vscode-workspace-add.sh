@@ -26,6 +26,7 @@ Usage: $0 [options]
 
 Options:
   -f, --file <file>       Specify the repository list file (default: 'repos.list').
+  -d, --debug             Enable debug output (shows path calculations).
   -h, --help              Display this help message.
 
 Each line in the repository list file can be in one of three formats:
@@ -222,6 +223,7 @@ spec_to_repo_name() {
 build_paths_list() {
   local repos_list_file="$1"
   local current_dir="$2"
+  local debug="${3:-false}"
   local parent_dir
   parent_dir="$(dirname "$current_dir")"
   
@@ -231,6 +233,7 @@ build_paths_list() {
   
   # Initialize fallback to current repo (the one containing repos.list)
   fallback_repo_name="$(basename "$current_dir")"
+  [[ "$debug" == true ]] && echo "[DEBUG] Initial fallback repo: $fallback_repo_name" >&2
 
   while IFS= read -r line || [ -n "$line" ]; do
     # Trim and skip comments/blank lines
@@ -239,6 +242,8 @@ build_paths_list() {
     case "$trimmed" in *" # "*) trimmed="${trimmed%% # *}" ;; *" #"*) trimmed="${trimmed%% #*}" ;; esac
     trimmed="${trimmed%"${trimmed##*[![:space:]]}"}"; trimmed=${trimmed%$'\r'}
     [ -z "$trimmed" ] && continue
+    
+    [[ "$debug" == true ]] && echo "[DEBUG] Processing line: $trimmed" >&2
 
     # Parse the line
     set -f
@@ -279,6 +284,7 @@ build_paths_list() {
           else
             repo_path="$parent_dir/${fallback_repo_name}-${branch}"
           fi
+          [[ "$debug" == true ]] && echo "[DEBUG]   @branch (worktree): branch=$branch, fallback=$fallback_repo_name, path=$repo_path" >&2
         else
           # Clone path: same as owner/repo@branch
           if [ -n "$target_dir" ]; then
@@ -286,6 +292,7 @@ build_paths_list() {
           else
             repo_path="$parent_dir/${fallback_repo_name}-${branch}"
           fi
+          [[ "$debug" == true ]] && echo "[DEBUG]   @branch (clone): branch=$branch, fallback=$fallback_repo_name, path=$repo_path" >&2
         fi
         ;;
       *)
@@ -328,6 +335,7 @@ build_paths_list() {
         
         # Update fallback for subsequent @branch lines
         fallback_repo_name="$repo_name"
+        [[ "$debug" == true ]] && echo "[DEBUG]   Clone line: repo=$repo_name, path=$repo_path, new fallback=$fallback_repo_name" >&2
         ;;
     esac
     set +f
@@ -373,17 +381,24 @@ update_workspace_file() {
 }
 
 main() {
+  local repos_list_file DEBUG
   if [ ! -f "repos.list" ] && [ -f "repos-to-clone.list" ]; then
-    local repos_list_file="repos.list"
+    repos_list_file="repos-to-clone.list"
   else
-    local repos_list_file="repos.list"
+    repos_list_file="repos.list"
   fi
+  DEBUG=false
+  
   # Argument parsing
   while [ "$#" -gt 0 ]; do
     case "$1" in
       -f|--file)
         shift
         [ "$#" -gt 0 ] && repos_list_file="$1" && shift || { usage; exit 1; }
+        ;;
+      -d|--debug)
+        DEBUG=true
+        shift
         ;;
       -h|--help)
         usage; exit 0
@@ -401,11 +416,16 @@ main() {
     exit 1
   fi
 
+  [[ "$DEBUG" == true ]] && echo "[DEBUG] Using repo list file: $repos_list_file" >&2
+
   local current_dir workspace_file paths_list
   current_dir="$(pwd)"
   workspace_file="$(get_workspace_file "$current_dir")"
+  
+  [[ "$DEBUG" == true ]] && echo "[DEBUG] Workspace file: $workspace_file" >&2
+  [[ "$DEBUG" == true ]] && echo "[DEBUG] Current dir: $current_dir" >&2
 
-  paths_list="$(build_paths_list "$repos_list_file" "$current_dir")"
+  paths_list="$(build_paths_list "$repos_list_file" "$current_dir" "$DEBUG")"
 
   update_workspace_file "$workspace_file" "$paths_list"
 }
