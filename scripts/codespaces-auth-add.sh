@@ -111,6 +111,14 @@ parse_args(){
   done
 }
 
+# ——— Helper to trim leading and trailing whitespace —————————————
+trim_whitespace() {
+  local str="$1"
+  str="${str#"${str%%[![:space:]]*}"}"
+  str="${str%"${str##*[![:space:]]}"}"
+  printf '%s\n' "$str"
+}
+
 # ——— Helper to normalise a remote URL to https format —————————————
 normalise_remote_to_https() {
   # Convert a remote URL to https://host/owner/repo (no .git)
@@ -145,15 +153,18 @@ get_current_repo_remote_https() {
     return 1
   }
 
-  local url="" first=""
-  if git remote | grep -qx 'origin'; then
+  local url="" first="" remotes
+  remotes="$(git remote 2>/dev/null || true)"
+  
+  if echo "$remotes" | grep -qx 'origin'; then
     if ! url="$(git remote get-url --push origin 2>/dev/null)"; then
       url="$(git remote get-url origin 2>/dev/null || true)"
     fi
   fi
 
-  if [ -z "$url" ]; then
-    if first="$(git remote 2>/dev/null | head -n1)"; then
+  if [ -z "$url" ] && [ -n "$remotes" ]; then
+    first="$(echo "$remotes" | head -n1)"
+    if [ -n "$first" ]; then
       if ! url="$(git remote get-url --push "$first" 2>/dev/null)"; then
         url="$(git remote get-url "$first" 2>/dev/null || true)"
       fi
@@ -184,8 +195,7 @@ normalise(){
   local raw first
   
   # Trim leading/trailing whitespace
-  line="${line#"${line%%[![:space:]]*}"}"
-  line="${line%"${line##*[![:space:]]}"}"
+  line=$(trim_whitespace "$line")
   
   # Parse first token
   set -- $line
@@ -244,7 +254,8 @@ build_raw_list(){
     
     while IFS= read -r line || [ -n "$line" ]; do
       # Trim and skip comments/blanks
-      local trimmed="${line#"${line%%[![:space:]]*}"}"
+      local trimmed
+      trimmed=$(trim_whitespace "$line")
       case "$trimmed" in
         ''|\#*) continue ;;
       esac
@@ -253,7 +264,7 @@ build_raw_list(){
         *" # "*) trimmed="${trimmed%% # *}" ;;
         *" #"*) trimmed="${trimmed%% #*}" ;;
       esac
-      trimmed="${trimmed%"${trimmed##*[![:space:]]}"}"
+      trimmed=$(trim_whitespace "$trimmed")
       trimmed="${trimmed%$'\r'}"
       [ -z "$trimmed" ] && continue
       
