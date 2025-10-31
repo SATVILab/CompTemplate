@@ -276,7 +276,11 @@ build_paths_list() {
         done
         
         # Determine if this is a worktree or clone
-        is_worktree=$(( no_worktree ? 0 : 1 ))
+        if [ "$no_worktree" -eq 1 ]; then
+          is_worktree=0
+        else
+          is_worktree=1
+        fi
         
         if [ "$is_worktree" -eq 1 ]; then
           # Worktree path: ../<fallback_repo>-<branch> or ../<target_dir>
