@@ -2,42 +2,6 @@
   "folders": [
     {
       "path": "."
-    },
-    {
-      "path": "../CompTemplate-analysis"
-    },
-    {
-      "path": "../paper"
-    },
-    {
-      "path": "../projr"
-    },
-    {
-      "path": "../projr-dev"
-    },
-    {
-      "path": "../projr-main"
-    },
-    {
-      "path": "../utils-rsv-release"
-    },
-    {
-      "path": "../Analysis-test"
-    },
-    {
-      "path": "../Analysis-tweak"
-    },
-    {
-      "path": "../Analysis-dev-2"
-    },
-    {
-      "path": "../Analysis-special-branch"
-    },
-    {
-      "path": "../DataTidy"
-    },
-    {
-      "path": "../data-tidy-feature"
     }
   ]
 }
